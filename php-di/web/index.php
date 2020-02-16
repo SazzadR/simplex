@@ -7,7 +7,7 @@ use FastRoute\RouteCollector;
 
 $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/', ['App\Controllers\HomeController', 'home']);
-    $r->addRoute('GET', '/articles', ['App\Controllers\ArticlesController', 'all']);
+    $r->addRoute('GET', '/articles/{id}', ['App\Controllers\ArticlesController', 'show']);
 });
 
 $route = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);

@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ArticlesCommand extends Command
 {
-    private ArticlesRepositoryInterface $articlesRepository;
+    private $articlesRepository;
 
     public function __construct(ArticlesRepositoryInterface $articlesRepository, string $name = null)
     {
@@ -21,10 +21,22 @@ class ArticlesCommand extends Command
     protected function configure()
     {
         $this->setName('articles')
-            ->setDescription('Show all articles');
+            ->addArgument('article-id')
+            ->setDescription('Show all articles or a single article');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        if ($input->getArgument('article-id')) {
+            $this->showSingleArticle($input, $output);
+        } else {
+            $this->showAllArticles($input, $output);
+        }
+
+        return 0;
+    }
+
+    private function showAllArticles(InputInterface $input, OutputInterface $output)
     {
         $articles = $this->articlesRepository->getAllArticles();
 
@@ -35,7 +47,19 @@ class ArticlesCommand extends Command
                 $article->getTitle()
             ));
         }
+    }
 
-        return 0;
+    private function showSingleArticle(InputInterface $input, OutputInterface $output)
+    {
+        $article = $this->articlesRepository->getArticleById($input->getArgument('article-id'));
+        if (is_null($article)) {
+            $output->writeln('No article found');
+            return;
+        }
+        $output->writeln(sprintf(
+            'Article #%d: <info>%s</info>',
+            $article->getId(),
+            $article->getTitle()
+        ));
     }
 }

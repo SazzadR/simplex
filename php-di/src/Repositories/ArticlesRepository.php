@@ -20,4 +20,11 @@ class ArticlesRepository implements ArticlesRepositoryInterface
             ->getRepository(Article::class)
             ->findAll();
     }
+
+    public function getArticleById($id)
+    {
+        return $this->entityManager
+            ->getRepository(Article::class)
+            ->find($id);
+    }
 }
