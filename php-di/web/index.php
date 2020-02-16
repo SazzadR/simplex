@@ -1,13 +1,13 @@
 <?php
 
+$container = require_once __DIR__ . '/../app/bootstrap.php';
+
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
 
-$container = require_once __DIR__ . '/../app/bootstrap.php';
-
-
 $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
-    $r->addRoute('GET', '/', ['App\Controller\HomeController', 'home']);
+    $r->addRoute('GET', '/', ['App\Controllers\HomeController', 'home']);
+    $r->addRoute('GET', '/articles', ['App\Controllers\ArticlesController', 'all']);
 });
 
 $route = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
